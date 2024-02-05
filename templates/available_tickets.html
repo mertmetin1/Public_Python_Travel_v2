@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Avaible Tickets
+{% endblock %}
+
+{% block main %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Starting Station</th>
+                <th scope="col">Destination</th>
+                <th scope="col">Date-Time</th>
+                <th>Expected Arrival Date-Time </th>
+                
+                <th scope="col">Price</th>
+                <th scope="col">Vehicle</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in places %}
+                    <tr>
+                        <td>{{ row.start_station }}</td>
+                        <td>{{ row.arrival_station }}</td>
+                        <td>{{ row.date_of_journey }}</td>
+                        <td>{{ row.date_of_journey+row.time_of_journey }}</td>
+                        
+                        <td>{{ row.price }}</td>
+                        <td>{{ row.vehicle_type }}</td>
+                        <td>
+                            <form action="/available_tickets" method="post">
+                                <button class="btn btn-primary" type="submit" name="buy_button" value="{{ row.route_id }}">BUY</button>
+                            </form>
+                        </td>
+                    </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

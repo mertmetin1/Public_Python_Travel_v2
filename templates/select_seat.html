@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Select Seat
+{% endblock %}
+
+{% block main %}
+
+<h2>Your ticket:</h2>
+<br>
+<form action="{{ url_for('select_seat') }}" method="POST">
+    <input type="hidden" name="route_id" value="{{ row.route_id }}">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Starting Station</th>
+                <th scope="col">Destination</th>
+                <th scope="col">Time Of Journey</th>
+                <th scope="col">Date</th>
+                <th scope="col">Price</th>
+                <th scope="col">Vehicle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ row.start_station }}</td>
+                <td>{{ row.arrival_station }}</td>
+                <td>{{ row.time_of_journey }}</td>
+                <td>{{ row.date_of_journey }}</td>
+                <td>{{ row.price }}</td>
+                <td>{{ row.vehicle_type }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+ 
+        <input type="hidden" name="route_id" value="{{ row.route_id }}">
+    
+        <h3>Select a seat</h3>
+        <div style="margin-left: 160px; margin-top: 20px; padding-left: 20px; width: 1550px; height: 300px; border: 2px solid black; display: flex; flex-wrap: wrap;">
+            {% for seat in range(1,passenger_capacity+1) %}
+                {% if seat in booked_seats %}
+                
+                    <button type="submit" name="seat_no" value="{{ seat }}" style="width: 50px; height: 50px; background-color: red; margin: 5px;">{{ seat }}</button>
+                {% else %}
+                    <button type="submit" name="seat_no" value="{{ seat }}" style="width: 50px; height: 50px; background-color: green; margin: 5px;">{{ seat }}</button>
+                {% endif %}
+            {% endfor %}
+        </div><br><br>
+    
+        <!--a<button class="btn btn-primary" type="submit">Purchase</button>-->
+    </form>
+    
+{% endblock %}

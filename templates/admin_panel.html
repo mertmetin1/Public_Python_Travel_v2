@@ -1,0 +1,395 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Admin Panel
+{% endblock %}
+
+{% block main %}
+<!-- admin_panel.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <style>        .sticky-search {
+        position: sticky;
+        
+        top: 60px; /* Adjust this value to create the desired gap */
+        padding: 6px;
+        margin-right: 80%;
+    }
+    
+    /* Style for the input field */
+    .sticky-search input[type="text"] {
+        width: 200px; /* Set the width of the input field */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        
+        
+    }
+    
+            
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    </style>
+
+
+    <div  class="sticky-search">
+        <label for="globalSearch">Search  </label>
+        <input type="text" id="globalSearch" placeholder="Search in ALL...">
+
+    
+    </div>
+<br>
+<!-- Add a button to trigger saving tables -->
+<button class="btn btn-success" onclick="saveAllTablesToCSV()">Save All Tables to CSV</button>
+
+
+<h2>Admins</h2>
+<a href="/add_row/admin" class="btn btn-primary">Admin ekle</a>
+<table class="table" border="1">
+    <thead>
+        <tr>
+            <th>Admin ID</th>
+            <th>Admin Username</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for admin in admin_rows %}
+            <tr>
+                <td>{{ admin.admin_id }}</td>
+                <td>{{ admin.admin_username }}</td>
+                <td>
+                    <!-- Delete butonu ve formu -->
+                  
+                    <form action="/delete_row/admin/admin_id/{{ admin.admin_id }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete admin">
+                        <a class="btn btn-warning"  href="{{ url_for('edit_row', table_name='admin', row_id=admin.admin_id) }}">Edit Admin</a>
+                    </form>
+                  
+                    <!-- Edit linki -->
+                    
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h1>Sold Tickets</h1>
+<table class="table" border="1">
+    <thead>
+        <tr>
+            
+            <th>Customer Name</th>
+            
+            <th>Age/Gender</th>
+            
+            <th>Phone</th>
+            
+            <th>Route</th>
+           
+            <th>Price</th>
+            <th>Date-Time of Journey</th>
+            <th>Expected Arrival Date-Time </th>
+            <th>Traveller Count</th>
+            <th>Seat No</th>
+            <th>Passenger Capacity</th>
+            <th>Employer</th>
+            <th>Vehicle Type</th>
+            
+
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data rows -->
+        {% for row in birlesik_veri %}
+        {% if row.date_of_journey < current_date %} {# Assuming now is the current date #}
+        <tr style="background-color: rgba(255, 0, 0, 0.5);"> {# Transparent red #}
+                <td>{{ row.customer_name + row.customer_surname }}</td>
+              
+                <td>{{ row.customer_age }}/{{ row.customer_gender }}</td>
+               
+                <td>{{ row.customer_phone }}</td>
+               
+                
+                <td>{{ row.arrival_station }} to {{ row.start_station }}</td>
+                <td>{{ row.price }}</td>
+                <td>{{ row.date_of_journey }}</td>
+                <td>{{ row.date_of_journey  + row.time_of_journey }}</td>
+                <td>{{ row.traveller_count }}</td>            
+                <td>{{ row.seat_no }}</td>
+                <td>{{ row.passenger_capacity }}</td>
+                <td>{{ row.employer }}</td>
+                <td>{{ row.vehicle_type }}</td>
+                
+
+            </tr>
+            {% else %}
+            <tr>
+                <td>{{ row.customer_name + row.customer_surname }}</td>
+              
+                <td>{{ row.customer_age }}/{{ row.customer_gender }}</td>
+               
+                <td>{{ row.customer_phone }}</td>
+               
+                
+                <td>{{ row.arrival_station }} to {{ row.start_station }}</td>
+                <td>{{ row.price }}</td>
+                <td>{{ row.date_of_journey }}</td>
+                <td>{{ row.date_of_journey  + row.time_of_journey }}</td>
+                <td>{{ row.traveller_count }}</td>            
+                <td>{{ row.seat_no }}</td>
+                <td>{{ row.passenger_capacity }}</td>
+                <td>{{ row.employer }}</td>
+                <td>{{ row.vehicle_type }}</td>
+                
+
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+    <br>
+</table>
+
+
+<h2>Ilanlar(routes)</h2>
+<p> araç rotada kullanılır durumda ise silinemez önce rotayı silmek sonra aracı silmek gerekyior</p>
+<table class="table" border="1">
+    <thead>
+        <tr>
+            <th>Route Date-Time</th>
+            <th>Price</th>
+            <th>Route Date-Time</th>
+            <th>Expected Arrival Date-Time</th>
+            <th>Traveller Count</th>
+            <th>Plate</th>
+            <th>Vehicle Capacity</th>
+
+            <th>Employer</th>
+            <th>Vehicle </th>  
+            <th>validity </th>  
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in birlesik_veri_route_vehicle %}
+        {% if row.date_of_journey < current_date %} {# Assuming now is the current date #}
+                <tr style="background-color: rgba(255, 0, 0, 0.5);"> {# Transparent red #}
+                    <td>{{ row.start_station }} to {{ row.arrival_station }}</td>
+
+                    <td>{{ row.price }}</td>
+                    <td>{{ row.date_of_journey }}</td>
+                    <td>{{ row.date_of_journey+row.time_of_journey }}</td>
+                    <td>{{ row.traveller_count }}</td>
+                    <td>{{ row.plate }}</td>
+                    <td>{{ row.passenger_capacity }}</td>
+    
+                    <td>{{ row.employer }}</td>
+                    <td>{{ row.vehicle_type }}</td>
+                        <td>İnvalid</td>
+                    </tr>
+                    {% else %}
+                    <tr > 
+                        <td>{{ row.start_station }} to {{ row.arrival_station }}</td>
+
+                        <td>{{ row.price }}</td>
+                        <td>{{ row.date_of_journey }}</td>
+                        <td>{{ row.date_of_journey+row.time_of_journey }}</td>
+                        <td>{{ row.traveller_count }}</td>
+                        <td>{{ row.plate }}</td>
+                        <td>{{ row.passenger_capacity }}</td>
+        
+                        <td>{{ row.employer }}</td>
+                        <td>{{ row.vehicle_type }}</td>
+                        <td>Valid</td>
+                    </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+<h2>Vehicles</h2>
+<table class="table" border="1">
+    <thead>
+        <tr>
+            
+            <th>Plate</th>
+            <th>Passenger Capacity</th>
+            <th>Vehicle KM</th>
+            <th>Maintenance KM</th>
+            <th>Employer</th>
+            <th>Vehicle Type</th>
+            <th>Next Maintain Date</th>
+            <th>Last Maintain Date</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for vehicle in vehicle_rows %}
+            <tr>
+                
+                <td>{{ vehicle.plate }}</td>
+                <td>{{ vehicle.passenger_capacity }}</td>
+                <td>{{ vehicle.vehicle_km }}</td>
+                <td>{{ vehicle.maintain_km }}</td>
+                <td>{{ vehicle.employer }}</td>
+                <td>{{ vehicle.vehicle_type }}</td>
+                <td>{{ vehicle.next_maintain_date }}</td>
+                <td>{{ vehicle.last_maintain_date }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<h2>Customer/User List</h2>
+<table class="table" border="1">
+    <thead>
+        <tr>
+        
+            <th>Name  </th>
+            <th>Surname </th>
+            <th>Age  </th>
+            <th>Gender  </th>
+            <th>Phone  </th>
+            <th>Username  </th>
+            <th>Password  </th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in combined_user_customer %}
+            <tr>
+          
+                <td>{{ row.customer_name }} </td>
+                <td>{{ row.customer_surname }}</td>
+                <td>{{ row.customer_age }}</td>
+                <td>{{ row.customer_gender }}</td>
+                <td>{{ row.customer_phone }}</td>
+                
+                <td>{{ row.user_name }}  </td>
+                <td>{{ row.user_password }}</td>
+                <td>
+            
+
+           
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
+<script>
+    // Function to filter all tables based on user input
+    function filterAllTables() {
+      const input = document.getElementById('globalSearch');
+      const filter = input.value.toUpperCase();
+      const tables = document.querySelectorAll('table');
+  
+      // Loop through each table and filter their rows
+      tables.forEach((table) => {
+        const tbody = table.querySelector('tbody');
+        const rows = tbody.getElementsByTagName('tr');
+  
+        // Loop through all table rows and hide those that don't match the search query
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const data = row.textContent || row.innerText;
+  
+          if (data.toUpperCase().indexOf(filter) > -1) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      });
+    }
+  
+    // Event listener for the global search input field
+    document.getElementById('globalSearch').addEventListener('keyup', filterAllTables);
+  </script>
+  <!-- ... Your existing HTML code ... -->
+
+  <script>
+    // Function to filter all tables based on user input
+    function filterAllTables() {
+      const input = document.getElementById('globalSearch');
+      const filter = input.value.toUpperCase();
+      const tables = document.querySelectorAll('table');
+  
+      // Loop through each table and filter their rows
+      tables.forEach((table) => {
+        const tbody = table.querySelector('tbody');
+        const rows = tbody.getElementsByTagName('tr');
+  
+        // Loop through all table rows and hide those that don't match the search query
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const data = row.textContent || row.innerText;
+  
+          if (data.toUpperCase().indexOf(filter) > -1) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      });
+    }
+  
+    // Event listener for the global search input field
+    document.getElementById('globalSearch').addEventListener('keyup', filterAllTables);
+  </script>
+
+<script>
+    // Function to save all tables to CSV
+    function saveAllTablesToCSV() {
+        saveTableToCSV('customer');
+        saveTableToCSV('user');
+        saveTableToCSV('vehicle');
+        saveTableToCSV('ticket');
+        saveTableToCSV('route');
+        // Add other table names here as needed.
+    }
+
+    // Function to save a specific table to CSV
+    function saveTableToCSV(table_name) {
+        fetch(`/save_to_csv/${table_name}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Assuming JSON response
+            } else {
+                throw new Error('Error saving table to CSV');
+            }
+        })
+        .then(data => {
+            // Handle success
+            console.log('File saved:', data.filename);
+            // You can perform additional actions here after successful save
+        })
+        .catch(error => console.error(error));
+    }
+</script>
+
+
+{% endblock %}

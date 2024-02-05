@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Inquire Ticket
+{% endblock %}
+
+{% block main %}
+<h1>Inquire Ticket</h1>
+<form action="/" method="post">
+    <div class="mb-3">
+        <input list="start_stations" autocomplete="off" autofocus class="form-control mx-auto w-auto"
+            name="starting_station" placeholder="Starting Station" type="text">
+
+        <datalist id="start_stations">
+            {% for row in start_stations %}
+            <option>{{row}}</option>
+            {% endfor %}
+        </datalist>
+    </div>
+    <div class="mb-3">
+        <input list="arrival_stations" autocomplete="off" autofocus class="form-control mx-auto w-auto"
+            name="destination" placeholder="Destination" type="text">
+
+        <datalist id="arrival_stations">
+            {% for row in arrival_stations %}
+            <option>{{row}}</option>
+            {% endfor %}
+        </datalist>
+    </div>
+    <button class="btn btn-primary" type="submit">Search</button>
+</form>
+{% endblock %}

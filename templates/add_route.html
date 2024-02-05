@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add Route
+{% endblock %}
+
+{% block main %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Route</title>
+</head>
+<body>
+    <h1>Add Route</h1>
+    <form action="/add_route" method="POST">
+        <label for="vehicle_id">Vehicle:</label>
+        <select id="vehicle_id" name="vehicle_id" required>
+            {% for vehicle in vehicles %}
+                <option value="{{ vehicle.vehicle_id }}">{{ vehicle.vehicle_type }},{{ vehicle.plate }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="time_of_journey">Time of Journey:</label>
+        <input type="time" id="time_of_journey" name="time_of_journey" required><br><br>
+
+        <label for="start_station">Start Station:</label>
+        <input type="text" id="start_station" name="start_station" required><br><br>
+
+        <label for="arrival_station">Arrival Station:</label>
+        <input type="text" id="arrival_station" name="arrival_station" required><br><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" step="0.01" required><br><br>
+
+ 
+        <label for="date_of_journey">Date and Time of Journey:</label>
+        <input type="datetime-local" id="date_of_journey" name="date_of_journey" required><br><br>
+ 
+       
+        <input type="submit" value="Add Route">
+    </form>
+</body>
+</html>
+{% endblock %}

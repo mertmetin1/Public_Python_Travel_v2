@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My Tickets
+{% endblock %}
+
+{% block main %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">NAME</th>
+                <th scope="col">SURNAME</th>
+                <th scope="col">AGE</th>
+                <th scope="col">GENDER</th>
+                <th scope="col">PHONE</th>
+                <th scope="col">STARTING STATION</th>
+                <th scope="col">DESTINATION</th>
+                <th scope="col">DATE</th>
+                <th scope="col">SEAT NO</th>
+                <th scope="col">TIME OF JOURNEY</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in ticket_info %}
+                <tr>
+                    <td>{{ row["customer_name"] }}</td>
+                    <td>{{ row["customer_surname"] }}</td>
+                    <td>{{ row["customer_age"] }}</td>
+                    <td>{{ row["customer_gender"] }}</td>
+                    <td>{{ row["customer_phone"] }}</td>
+                    <td>{{ row["start_station"] }}</td>
+                    <td>{{ row["arrival_station"] }}</td>
+                    <td>{{ row["date_of_journey"] }}</td>
+                    <td>{{ row["seat_no"] }}</td>
+                    <td>{{ row["time_of_journey"] }}</td>
+
+                    <td>
+                        <form action="/my_tickets" method="POST">
+                            <button class="btn btn-danger" type="submit" name="delete_button" value="{{ row['ticket_id'] }}">Cancel Ticket</button>
+                            <input type="hidden" name="name" value="{{ row['ticket_id'] }}">
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

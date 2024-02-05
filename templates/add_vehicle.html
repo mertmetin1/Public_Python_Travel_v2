@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add Vehicle
+{% endblock %}
+
+{% block main %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Vehicle</title>
+</head>
+<body>
+    <h1>Add Vehicle</h1>
+    <form action="/add_vehicle" method="POST">
+        <label for="plate">Plate:</label>
+        <input type="text" id="plate" name="plate" required><br><br>
+
+        <label for="passenger_capacity">Passenger Capacity:</label>
+        <input type="number" id="passenger_capacity" name="passenger_capacity" required><br><br>
+
+        <label for="vehicle_km">Vehicle KM:</label>
+        <input type="number" id="vehicle_km" name="vehicle_km" required><br><br>
+
+        <label for="maintain_km">Maintain KM:</label>
+        <input type="number" id="maintain_km" name="maintain_km" required><br><br>
+
+        <label for="employer">Employer:</label>
+        <input type="text" id="employer" name="employer" required><br><br>
+
+        <label for="vehicle_type">Vehicle Type:</label>
+        <input type="text" id="vehicle_type" name="vehicle_type" required><br><br>
+
+        <label for="next_maintain_date">Next Maintain Date:</label>
+        <input type="datetime-local" id="next_maintain_date" name="next_maintain_date" required><br><br>
+
+        <label for="last_maintain_date">Last Maintain Date:</label>
+        <input type="datetime-local" id="last_maintain_date" name="last_maintain_date" required><br><br>
+
+        <input type="submit" value="Add Vehicle">
+    </form>
+</body>
+</html>
+{% endblock %}

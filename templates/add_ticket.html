@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add Ticket
+{% endblock %}
+
+{% block main %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Ticket</title>
+</head>
+<body>
+    <h2>Add Ticket</h2>
+
+    <form action="/add_ticket" method="POST">
+        <label for="route_id">Route ID:</label>
+        <select id="route_id" name="route_id">
+            {% for route in routes %}
+                <option value="{{ route.route_id }}">{{ route.start_station }} to {{ route.arrival_station }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="customer_id">Customer ID:</label>
+        <select id="customer_id" name="customer_id">
+            {% for customer in customers %}
+                <option value="{{ customer.customer_id }}">{{ customer.customer_name }} {{ customer.customer_surname }} </option>
+            {% endfor %}
+        </select><br><br>
+
+
+        <label for="seat_no">Seat No:</label>
+        <input type="text" id="seat_no" name="seat_no"><br><br>
+        
+
+
+        <input type="submit" value="Add Ticket">
+    </form>
+</body>
+</html>
+{% endblock %}

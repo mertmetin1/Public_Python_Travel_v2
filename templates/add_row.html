@@ -1,0 +1,25 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+Add Row
+{% endblock %}
+
+{% block main %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ekle - {{ table_name }}</title>
+</head>
+<body>
+    <h2>{{ table_name }} Tablosuna Satır Ekle</h2>
+    <form method="POST">
+        {% for column in columns[1:] %}
+            <label for="{{ column }}">{{ column }}:</label>
+            <input type="text" id="{{ column }}" name="{{ column }}" value="{{ form_data.get(column, '') }}"><br><br>
+        {% endfor %}
+        <input type="submit" value="Ekle">
+    </form>
+</body>
+</html>
+{% endblock %}

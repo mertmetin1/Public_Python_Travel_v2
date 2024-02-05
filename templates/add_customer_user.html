@@ -1,0 +1,67 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+Add Customer Account
+{% endblock %}
+
+{% block main %}
+<!-- add_customer_user.html -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Customer/User</title>
+    <style>
+        /* Basit bir CSS örneği - İstediğiniz gibi düzenleyebilirsiniz */
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 250px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Add Customer/User</h2>
+    <form method="post" action="/add_customer_user">
+        <label for="customer_name">Customer Name:</label>
+        <input type="text" id="customer_name" name="customer_name" required>
+        
+        <label for="customer_surname">Customer Surname:</label>
+        <input type="text" id="customer_surname" name="customer_surname" required>
+        
+        <label for="customer_age">Customer Age:</label>
+        <input type="number" id="customer_age" name="customer_age" required>
+        
+        <label for="customer_gender">Customer Gender:</label>
+        <select id="customer_gender" name="customer_gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        
+        <label for="customer_phone">Customer Phone:</label>
+        <input type="text" id="customer_phone" name="customer_phone" required>
+        
+        <label for="user_name">User Name:</label>
+        <input type="text" id="user_name" name="user_name" required>
+        
+        <label for="user_password">User Password:</label>
+        <input type="password" id="user_password" name="user_password" required>
+        <br> <br>
+        <input type="submit" value="Add Customer/User">
+    </form>
+</body>
+</html>
+{% endblock %}

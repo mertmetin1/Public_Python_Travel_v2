@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Customer/User
+{% endblock %}
+
+{% block main %}
+
+<style>
+
+    .sticky-search {
+        position: sticky;
+        
+        top: 60px; /* Adjust this value to create the desired gap */
+        padding: 6px;
+        margin-right: 80%;
+    }
+    
+    /* Style for the input field */
+    .sticky-search input[type="text"] {
+        width: 200px; /* Set the width of the input field */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        
+        
+    }
+</style>
+
+<div  class="sticky-search">
+    <label for="globalSearch">Search  </label>
+    <input type="text" id="globalSearch" placeholder="Search...">
+</div>
+<h2>Customer/User </h2>
+<p>silinmek istenen kişinin bileti var ise cutomer/user silem işlemi yapılamaz önce biletin silinmesi gerekli</p>
+<button class="btn btn-success" onclick="saveTableToCSV('customer')">Save customer Table to CSV</button>
+<button class="btn btn-success" onclick="saveTableToCSV('user')">Save user Table to CSV</button>
+<!-- ... -->
+<br>
+
+<a class="btn btn-primary" href="{{ url_for('add_customer_user') }}">Add Customer/User</a>
+ 
+
+<table class="table" border="1">
+    <thead>
+        <tr>
+            <th>Customer ID  </th>
+            <th>  User ID  </th>
+            <th>Name  </th>
+            <th>Age  </th>
+            <th>Gender  </th>
+            <th>Phone  </th>
+            <th>Username(Action)  </th>
+            <th>Password  </th>
+            <th>Customer Actions  </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in combined_user_customer %}
+            <tr>
+                <td>{{ row.customer_id }}</td>
+                <td>{{ row.user_id }}</td>
+                <td>{{ row.customer_name }} {{ row.customer_surname }}</td>
+                <td>{{ row.customer_age }}</td>
+                <td>{{ row.customer_gender }}</td>
+                <td>{{ row.customer_phone }}</td>
+                <!-- Display corresponding user details -->
+                <td>{{ row.user_name }}   <a class="btn btn-warning" href="{{ url_for('edit_row', table_name='user', row_id=row.user_id) }}">Edit User</a> </td>
+                <td>{{ row.user_password }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_row', table_name='customer', column_name='customer_id', row_id=row.customer_id) }}">
+                        <a class="btn btn-warning" href="{{ url_for('edit_row', table_name='customer', row_id=row.customer_id) }}">Edit Customer</a>
+                        <input class="btn btn-danger" type="submit" value="Delete">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    // Function to filter all tables based on user input
+    function filterAllTables() {
+      const input = document.getElementById('globalSearch');
+      const filter = input.value.toUpperCase();
+      const tables = document.querySelectorAll('table');
+  
+      // Loop through each table and filter their rows
+      tables.forEach((table) => {
+        const tbody = table.querySelector('tbody');
+        const rows = tbody.getElementsByTagName('tr');
+  
+        // Loop through all table rows and hide those that don't match the search query
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const data = row.textContent || row.innerText;
+  
+          if (data.toUpperCase().indexOf(filter) > -1) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      });
+    }
+  
+    // Event listener for the global search input field
+    document.getElementById('globalSearch').addEventListener('keyup', filterAllTables);
+  </script>
+  
+
+  <script>
+    // Function to save a specific table to CSV
+    function saveTableToCSV(table_name) {
+        fetch(`/save_to_csv/${table_name}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Assuming JSON response
+            } else {
+                throw new Error('Error saving table to CSV');
+            }
+        })
+        .then(data => {
+            // Handle success
+            console.log('File saved:', data.filename);
+            // You can perform additional actions here after successful save
+        })
+        .catch(error => console.error(error));
+    }
+</script>
+  {% endblock %}

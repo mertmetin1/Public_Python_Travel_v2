@@ -1,0 +1,51 @@
+
+### Tables:
+**admin**
+   - admin_id (int, Primary Key, Auto Increment)
+   - admin_username (varchar)
+   - admin_password (varchar)
+
+ **customer**
+   - customer_id (int, Primary Key, Auto Increment)
+   - customer_name (varchar)
+   - customer_surname (varchar)
+   - customer_age (int)
+   - customer_gender (varchar)
+   - customer_phone (varchar)
+
+
+
+ **route**
+   - route_id (int, Primary Key, Auto Increment)
+   - vehicle_id (int, Foreign Key to vehicle table)
+   - time_of_journey (time)
+   - start_station (varchar)
+   - arrival_station (varchar)
+   - price (decimal)
+   - date_of_journey (DATETIME)
+   - traveller_count (int)
+
+6. **ticket**
+   - ticket_id (int, Primary Key, Auto Increment)
+   - route_id (int, Foreign Key to route table)
+   - customer_id (int, Foreign Key to customer table)
+   - seat_no (int)
+
+ **user**
+   - user_id (int, Primary Key, Auto Increment)
+   - customer_id (int, Foreign Key to customer table)
+   - user_name (varchar)
+   - user_password (varchar)
+
+ **vehicle**
+   - vehicle_id (int, Primary Key, Auto Increment)
+   - plate (varchar)
+   - passenger_capacity (int)
+   - vehicle_km (int)
+   - maintain_km (int)
+   - employer (varchar)
+   - vehicle_type (varchar)
+   -next_maintain_date 	datetime 
+   -last_maintain_date 	datetime 
+
+

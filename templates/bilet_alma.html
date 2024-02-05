@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+bilet alma
+{% endblock %}
+
+{% block main %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilet Alma</title>
+</head>
+<body>
+    <h1>Bilet Alma Sayfası</h1>
+    {% if user_info %}
+        <p>Oturum Bilgileri:</p>
+        <ul>
+            {% for key, value in user_info.items() %}
+                <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Oturum açmadınız. Oturum açmak için <a href="{{ url_for('user_login') }}">buraya</a> tıklayınız.</p>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Vehicles
+{% endblock %}
+
+{% block main %}
+<style>
+
+    .sticky-search {
+        position: sticky;
+        
+        top: 60px; /* Adjust this value to create the desired gap */
+        padding: 6px;
+        margin-right: 80%;
+    }
+    
+    /* Style for the input field */
+    .sticky-search input[type="text"] {
+        width: 200px; /* Set the width of the input field */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        
+        
+    }
+</style>
+
+
+<div  class="sticky-search">
+    <label for="globalSearch">Search  </label>
+    <input type="text" id="globalSearch" placeholder="Search...">
+</div>
+<h2>Vehicles</h2>
+<!-- ... -->
+<button class="btn btn-success" onclick="saveTableToCSV('vehicle')">Save Table to CSV</button>
+<!-- ... -->
+<p> Routea atanmış araç silinemez  önce route silinmeli</p>
+<!-- Save Table to CSV button -->
+
+
+
+<a class="btn btn-primary" href="{{ url_for('add_vehicle') }}">Add Vehicle</a>
+<table class="table" border="1">
+    <thead>
+        <tr>
+            <th>Vehicle ID</th>
+            <th>Plate</th>
+            <th>Passenger Capacity</th>
+            <th>Vehicle KM</th>
+            <th>Maintain KM</th>
+            <th>Employer</th>
+            <th>Vehicle Type</th>
+            <th>Next Maintain Date</th>
+            <th>Last Maintain Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vehicle in vehicle_rows %}
+            <tr>
+                <td>{{ vehicle.vehicle_id }}</td>
+                <td>{{ vehicle.plate }}</td>
+                <td>{{ vehicle.passenger_capacity }}</td>
+                <td>{{ vehicle.vehicle_km }}</td>
+                <td>{{ vehicle.maintain_km }}</td>
+                <td>{{ vehicle.employer }}</td>
+                <td>{{ vehicle.vehicle_type }}</td>
+                <td>{{ vehicle.next_maintain_date }}</td>
+                <td>{{ vehicle.last_maintain_date }}</td>
+                <td>  
+                    <form  action="/delete_row/vehicle/vehicle_id/{{ vehicle.vehicle_id }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete vehicle">
+                        <a class="btn btn-warning" href="{{ url_for('edit_row', table_name='vehicle', row_id=vehicle.vehicle_id) }}">Edit Vehicle</a> 
+                    </form>
+                      
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+<script>
+    // Function to save a specific table to CSV
+    function saveTableToCSV(table_name) {
+        fetch(`/save_to_csv/${table_name}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Assuming JSON response
+            } else {
+                throw new Error('Error saving table to CSV');
+            }
+        })
+        .then(data => {
+            // Handle success
+            console.log('File saved:', data.filename);
+            // You can perform additional actions here after successful save
+        })
+        .catch(error => console.error(error));
+    }
+</script>
+
+
+<script>
+    // Function to filter all tables based on user input
+    function filterAllTables() {
+      const input = document.getElementById('globalSearch');
+      const filter = input.value.toUpperCase();
+      const tables = document.querySelectorAll('table');
+  
+      // Loop through each table and filter their rows
+      tables.forEach((table) => {
+        const tbody = table.querySelector('tbody');
+        const rows = tbody.getElementsByTagName('tr');
+  
+        // Loop through all table rows and hide those that don't match the search query
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const data = row.textContent || row.innerText;
+  
+          if (data.toUpperCase().indexOf(filter) > -1) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      });
+    }
+  
+    // Event listener for the global search input field
+    document.getElementById('globalSearch').addEventListener('keyup', filterAllTables);
+  </script>
+  
+
+  {% endblock %}

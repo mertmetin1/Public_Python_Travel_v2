@@ -1,0 +1,264 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Routes
+{% endblock %}
+
+{% block main %}
+<style>        .sticky-search {
+    position: sticky;
+    
+    top: 60px; /* Adjust this value to create the desired gap */
+    padding: 6px;
+    margin-right: 80%;
+}
+
+/* Style for the input field */
+.sticky-search input[type="text"] {
+    width: 200px; /* Set the width of the input field */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    
+    
+}
+
+        
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}
+</style>
+
+
+<div  class="sticky-search">
+    
+    <label for="globalSearch">Search  </label>
+    <input type="text" id="globalSearch" placeholder="Search in Routes...">
+    <select id="dateValidityFilter" onchange="filterByDateValidity(this.value)">
+        <option value="all">Filter by validity</option>
+        <option value="Valid">Valid</option>
+        <option value="İnvalid">Invalid</option>
+    </select>
+    <select id="routeFilter" onchange="filterByRoute()">
+        <option value="all">Filter by Route</option>
+    </select>
+
+
+
+
+</div>
+
+<h2>Routes</h2>
+<button class="btn btn-success" onclick="saveTableToCSV('route')">Save Table to CSV</button>
+<p> ticketa atanmış route silinemez önce ticket silinmeli</p>
+<a class="btn btn-primary" href="{{ url_for('add_route') }}">Add Route</a>
+<table>
+    <thead>
+        <tr>
+            <th>Route ID</th>
+            <th>Vehicle ID</th>
+            
+            <th>Route </th>
+
+            <th>Price</th>
+            <th>Date-Time of Journey</th>
+            <th>Expected Arrival Date-Time</th>
+            <th>Traveller Count</th>
+            <!-- Araç Özellikleri -->
+            <th>Plate</th>
+            <th>Passenger Capacity</th>
+
+            <th>Employer</th>
+            <th>Vehicle Type</th>
+            <th>Out Of Date</th>
+            <th>Action</th>
+            <!-- Diğer Araç Özellikleri -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in combined_data %}
+        {% if row.date_of_journey < current_date %} {# Assuming now is the current date #}
+        <tr style="background-color: rgba(255, 0, 0, 0.5);"> {# Transparent red #}
+                <td>{{ row.route_id }}</td>
+                <td>{{ row.vehicle_id }}</td>
+                
+                <td>{{ row.start_station }} to {{ row.arrival_station }}</td>
+                <td>{{ row.price }}</td>
+                <td>{{ row.date_of_journey }}</td>
+                <td>{{ row.date_of_journey+row.time_of_journey }}</td>
+                <td>{{ row.traveller_count }}</td>
+                <!-- Araç Özellikleri -->
+                <td>{{ row.plate }}</td>
+                <td>{{ row.passenger_capacity }}</td>
+
+                <td>{{ row.employer }}</td>
+                <td>{{ row.vehicle_type }}</td>
+                <td>İnvalid</td>
+                <td>  
+                    <form  action="/delete_row/route/route_id/{{ row.route_id }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete ">
+                        <a class="btn btn-warning" href="{{ url_for('edit_row', table_name='route', row_id=row.route_id) }}">Edit </a>    
+
+                    </form>
+                </td>
+                <!-- Diğer Araç Özellikleri -->
+            </tr>
+            {% else %}
+            <tr > 
+                <td>{{ row.route_id }}</td>
+                <td>{{ row.vehicle_id }}</td>
+              
+                <td>{{ row.start_station }} to {{ row.arrival_station }}</td>
+                
+                <td>{{ row.price }}</td>
+                <td>{{ row.date_of_journey }}</td>
+                <td>{{ row.date_of_journey  + row.time_of_journey }}</td>
+                <td>{{ row.traveller_count }}</td>
+                <!-- Araç Özellikleri -->
+                <td>{{ row.plate }}</td>
+                <td>{{ row.passenger_capacity }}</td>
+
+                <td>{{ row.employer }}</td>
+                <td>{{ row.vehicle_type }}</td>
+                <td>Valid</td>
+                <td>  
+                    <form  action="/delete_row/route/route_id/{{ row.route_id }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete ">
+                        <a class="btn btn-warning" href="{{ url_for('edit_row', table_name='route', row_id=row.route_id) }}">Edit </a>    
+
+                    </form>
+                </td>
+                <!-- Diğer Araç Özellikleri -->
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    // Function to filter all tables based on user input
+    function filterAllTables() {
+      const input = document.getElementById('globalSearch');
+      const filter = input.value.toUpperCase();
+      const tables = document.querySelectorAll('table');
+  
+      // Loop through each table and filter their rows
+      tables.forEach((table) => {
+        const tbody = table.querySelector('tbody');
+        const rows = tbody.getElementsByTagName('tr');
+  
+        // Loop through all table rows and hide those that don't match the search query
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const data = row.textContent || row.innerText;
+  
+          if (data.toUpperCase().indexOf(filter) > -1) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      });
+    }
+  
+    // Event listener for the global search input field
+    document.getElementById('globalSearch').addEventListener('keyup', filterAllTables);
+  </script>
+  
+
+<script>
+    // Function to save a specific table to CSV
+    function saveTableToCSV(table_name) {
+        fetch(`/save_to_csv/${table_name}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Assuming JSON response
+            } else {
+                throw new Error('Error saving table to CSV');
+            }
+        })
+        .then(data => {
+            // Handle success
+            console.log('File saved:', data.filename);
+            // You can perform additional actions here after successful save
+        })
+        .catch(error => console.error(error));
+    }
+</script>
+
+<script>
+// Rotaları depolamak için bir dizi oluştur
+const routes = [];
+
+// Seçim kutusunu alma
+const routeFilter = document.getElementById('routeFilter');
+
+// Rotaları diziye ekleme ve seçim kutusuna eklenmesi
+document.addEventListener('DOMContentLoaded', () => {
+    const rows = document.querySelectorAll('table tbody tr');
+
+    rows.forEach(row => {
+        const routeCell = row.cells[2]; // Rota hücresinin indexi
+        const route = routeCell.textContent.trim();
+        
+        // Rota daha önce eklenmediyse, diziye ekle
+        if (!routes.includes(route)) {
+            routes.push(route);
+            const option = document.createElement('option');
+            option.value = route;
+            option.text = route;
+            routeFilter.appendChild(option);
+        }
+    });
+});
+
+// Rotaya göre tabloyu filtreleme işlevi
+function filterByRoute() {
+    const selectedRoute = routeFilter.value;
+    const rows = document.querySelectorAll('table tbody tr');
+
+    rows.forEach(row => {
+        const routeCell = row.cells[2]; // Rota hücresinin indexi
+
+        if (selectedRoute === 'all' || routeCell.textContent.trim() === selectedRoute) {
+            row.style.display = ''; // Satırı görünür yap
+        } else {
+            row.style.display = 'none'; // Satırı gizle
+        }
+    });
+}
+
+
+</script>
+
+<script>
+    // Geçerli veya geçersiz tarihlerle tabloyu filtreleme işlevi
+    function filterByDateValidity(validity) {
+        const rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(row => {
+            const validityCell = row.cells[11]; // Geçerlilik durumu hücresinin indexi
+
+            if (validity === 'all' || validityCell.textContent.trim() === validity) {
+                row.style.display = ''; // Satırı görünür yap
+            } else {
+                row.style.display = 'none'; // Satırı gizle
+            }
+        });
+    }
+</script>
+
+{% endblock %}

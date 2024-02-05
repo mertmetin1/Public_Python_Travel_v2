@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/user_register" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="user_name"
+                   name="user_name" placeholder="Username" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="customer_name"
+                   name="customer_name" placeholder="Name" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="customer_surname"
+                   name="customer_surname" placeholder="Surname" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input type="number" autocomplete="off" autofocus class="form-control mx-auto w-auto" id="customer_age"
+                   name="customer_age" placeholder="Age" type="text" required>
+        </div>
+        <div class="mb-3">
+            <select autofocus class="form-control mx-auto w-auto" id="customer_gender"
+                    name="customer_gender" class="form-control mx-auto w-auto" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+                <option hidden="hidden" value="Other" selected="selected">Gender</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <input type="number" autocomplete="off" autofocus class="form-control mx-auto w-auto" id="customer_phone"
+                   name="customer_phone" placeholder="Phone" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="user_password"
+                   name="user_password" placeholder="Password" type="password" required>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="password"
+                   name="confirmation" placeholder="Confirm Password" type="password" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+    </form>
+{% endblock %}
